@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: {
-        values: ["free", "premium"],
+        values: ["free", "premium", "admin"],
         message: "{VALUE} is not a supported data source",
       },
       default: "free",
@@ -33,6 +33,19 @@ const UserSchema = new mongoose.Schema(
     image: {
       type: String,
       trim: true,
+    },
+    // Enhanced user permissions for premium features
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    permissions: {
+      type: [String],
+      default: ["read"],
+    },
+    role: {
+      type: String,
+      default: "user",
     },
   },
   { timestamps: true },
