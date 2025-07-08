@@ -4,6 +4,7 @@ import connectMongo from "@config/mongo"
 import logger from "@config/logger"
 import { Account } from "@models/index"
 import { associateProfileWithAccount } from "./account"
+import { ObjectId } from "bson"
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions)
@@ -71,14 +72,17 @@ async function testProfileAssociationPerformance(
 
   // Run multiple iterations to test performance
   for (let i = 0; i < iterations; i++) {
+    // Generate a new unique profileId for each iteration to ensure full association process
+    const uniqueProfileId = new ObjectId().toString()
     const iterationStart = Date.now()
-    const result = await associateProfileWithAccount(account, profileId)
+    const result = await associateProfileWithAccount(account, uniqueProfileId)
     const iterationTime = Date.now() - iterationStart
 
     results.push({
       iteration: i + 1,
       success: result !== null,
       duration: iterationTime,
+      profileId: uniqueProfileId,
     })
   }
 
